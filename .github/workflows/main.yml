@@ -23,4 +23,4 @@ jobs:
           pip install easyocr==1.6.2 numpy==1.23.3 Pillow==9.2.0 requests==2.28.1
       - name: PAFD
         run: |
-          python main.py --uid=22210240435 --pwd=Enriqueliu1999@
+          python3 main.py --uid=22210240435 --pwd=Enriqueliu1999@
