@@ -1,11 +1,4 @@
-json
-time
-os
-sys
-getpass
-re
-base64
-easyocr
-io
-numpy
-PIL
+easyocr==1.6.2
+numpy==1.23.3
+Pillow==9.2.0
+requests==2.28.1
