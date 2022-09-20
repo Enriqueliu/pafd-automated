@@ -12,9 +12,14 @@ import io
 import numpy
 from PIL import Image
 from PIL import ImageEnhance
-
+import argparse
 from requests import session, post, adapters
 adapters.DEFAULT_RETRIES = 5
+
+parser = argparse.ArgumentParser(description='UIS')
+parser.add_argument('--uid', type=str, default = None)
+parser.add_argument('--pwd', type=str, default=32)
+args = parser.parse_args()
 
 class Fudan:
     """
@@ -293,8 +298,8 @@ def get_account():
 
 if __name__ == '__main__':
     # uid, psw = get_account()
-    uid = input()
-    psw = input()
+    uid = args.uid
+    psw = args.pwd
     # print(uid, psw)
     zlapp_login = 'https://uis.fudan.edu.cn/authserver/login?' \
                   'service=https://zlapp.fudan.edu.cn/site/ncov/fudanDaily'
