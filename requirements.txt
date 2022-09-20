@@ -1,0 +1,11 @@
+json
+time
+os
+sys
+getpass
+re
+base64
+easyocr
+io
+numpy
+PIL
