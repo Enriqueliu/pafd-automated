@@ -65,7 +65,7 @@ class Fudan:
             print("◉Fail to open Login Page, Check your Internet connection\n")
             self.close()
 
-    def login(self):
+    def login(self, pafd):
         """
         执行登录
         """
@@ -108,6 +108,8 @@ class Fudan:
             print("\n***********************"
                   "\n◉登录成功"
                   "\n***********************\n")
+            pafd["login_state"] = "登录成功"
+
         else:
             print("◉登录失败，请检查账号信息")
             self.close()
@@ -139,7 +141,7 @@ class Fudan:
 class Zlapp(Fudan):
     last_info = ''
 
-    def check(self):
+    def check(self, pafd):
         """
         检查
         """
@@ -167,12 +169,23 @@ class Zlapp(Fudan):
         time.tzset()
         today = time.strftime("%Y%m%d", time.localtime())
         print("◉今日日期为:", today)
+        pafd["last_date"] = last_info["d"]["info"]["date"];
+        pafd["last_area"] = last_area;
+        pafd["last_address"] = position['formattedAddress'];
+        pafd["today_date"] = today;
         if last_info["d"]["info"]["date"] == today:
             print("\n*******今日已提交*******")
+            pafd["submit_state"] = "今日已提交";
+            with open("pafd.json", "w") as f:
+                pafd["login_state"] = "登录成功"
+                json.dump(pafd, f, ensure_ascii=False)
+                f.close()
             self.close()
         else:
             print("\n\n*******未提交*******")
+            pafd["submit_state"] = "未提交";
             self.last_info = last_info["d"]["oldInfo"]
+
             
     def read_captcha(self, img_byte):
         img = Image.open(io.BytesIO(img_byte)).convert('L')
@@ -198,7 +211,7 @@ class Zlapp(Fudan):
         img = self.session.get(self.url_code).content
         return self.read_captcha(img)
 
-    def checkin(self):
+    def checkin(self, pafd):
         """
         提交
         """
@@ -259,9 +272,14 @@ class Zlapp(Fudan):
 
             save_msg = json_loads(save.text)["m"]
             print(save_msg, '\n\n')
+            msg = ['识别中...\n', save_msg]
+            with open("pafd.json", "w") as f:
+                pafd["operate_state"] = "".join(msg);
+                json.dump(pafd, f, ensure_ascii=False)
             time.sleep(0.1)
             if(json_loads(save.text)["e"] != 1):
                 break
+            
 
 def get_account():
     """
@@ -306,10 +324,18 @@ if __name__ == '__main__':
     code_url = "https://zlapp.fudan.edu.cn/backend/default/code"
     daily_fudan = Zlapp(uid, psw,
                         url_login=zlapp_login, url_code=code_url)
-    daily_fudan.login()
-
-    daily_fudan.check()
-    daily_fudan.checkin()
+    pafd ={ 
+        "login_state":"",
+        "last_date":"",
+        "last_area":"",
+        "last_address":"",
+        "today_date":"",
+        "submit_state":"",
+        "operate_state":""          
+    } 
+    daily_fudan.login(pafd)
+    daily_fudan.check(pafd)
+    daily_fudan.checkin(pafd)
     # 再检查一遍
-    daily_fudan.check()
+    daily_fudan.check(pafd)
     daily_fudan.close(1)
