@@ -9,3 +9,5 @@ Change Log
     - 添加自动化 Action
 - [x] 2022-09-21
     - 通知信息推送微信测试号
+- [x] 2022-10-12
+    - 添加 actions secrets 使用
