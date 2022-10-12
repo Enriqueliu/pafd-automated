@@ -24,7 +24,7 @@ jobs:
           pip install -r requirements.txt
       - name: PAFD
         run: |
-          python main.py --uid=22210240435 --pwd=Enriqueliu1999@
+          python main.py --uid=${{ secrets.UISID }} --pwd=${{ secrets.PASSWORD }}
       - name: weixin
         run: |
           python sendweixin.py
